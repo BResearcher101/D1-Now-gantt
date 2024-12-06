@@ -3,86 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detailed Trial Timeline</title>
+    <title>Expanded Trial Timeline</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav>
         <a href="index.html">Home</a> |
-        <a href="new_page.html">Detailed Timeline</a>
+        <a href="new_page.html">Expanded Timeline</a>
     </nav>
 
-    <h1>Detailed Trial Timeline</h1>
+    <h1>Expanded Trial Timeline</h1>
     <div id="timeline"></div>
 
     <script>
-        // Define end date of the project
-        const projectEndDate = new Date("2028-05-31");
-
-        // Define colours for tasks
-        const taskColours = {
-            "Pre-Preparation": "#1f77b4",
-            "Quantitative Survey": "#ff7f0e",
-            "Qualitative Data Collection": "#2ca02c",
-            "Effectiveness Evaluation": "#d62728",
-            "Economic Analysis Reporting": "#9467bd",
-            "Process Evaluation & Qualitative Study": "#8c564b",
-            "SWAT Analysis": "#e377c2",
-            "Report Writing & Publication": "#7f7f7f",
-            "Knowledge Translation & Dissemination": "#bcbd22"
-        };
-
-        // Example data from the first page (Onboarding dates for 3 centres)
+        // Assume onboarding dates from the first page (example for all 12 centres)
         const centresData = [
             { Centre: "Centre 1", OnboardingDate: "2025-05-01" },
             { Centre: "Centre 2", OnboardingDate: "2025-06-01" },
             { Centre: "Centre 3", OnboardingDate: "2025-07-01" },
-            // Add more centres dynamically from the first page
+            { Centre: "Centre 4", OnboardingDate: "2025-08-01" },
+            { Centre: "Centre 5", OnboardingDate: "2025-09-01" },
+            { Centre: "Centre 6", OnboardingDate: "2025-10-01" },
+            { Centre: "Centre 7", OnboardingDate: "2025-11-01" },
+            { Centre: "Centre 8", OnboardingDate: "2025-12-01" },
+            { Centre: "Centre 9", OnboardingDate: "2026-01-01" },
+            { Centre: "Centre 10", OnboardingDate: "2026-03-01" },
+            { Centre: "Centre 11", OnboardingDate: "2026-05-01" },
+            { Centre: "Centre 12", OnboardingDate: "2026-07-01" },
         ];
 
-        // Generate tasks based on the onboarding dates
         const tasks = [];
+        const projectEndDate = new Date("2028-05-31");
+
+        // Colours for each type of task
+        const taskColours = {
+            "Pre-Preparation": "#1f77b4",
+            "Baseline Data Collection": "#ff7f0e",
+            "Clinic Appointment 1": "#2ca02c",
+            "Clinic Appointment 2": "#d62728",
+            "Clinic Appointment 3": "#9467bd",
+            "Follow-Up Activities": "#8c564b",
+            "Quantitative Survey": "#e377c2",
+            "Qualitative Data Collection": "#7f7f7f",
+            "Effectiveness Evaluation": "#bcbd22",
+            "Economic Analysis Reporting": "#17becf",
+            "Process Evaluation & Qualitative Study": "#d62728",
+            "SWAT Analysis": "#e377c2",
+            "Report Writing & Publication": "#8c564b",
+            "Knowledge Translation & Dissemination": "#17becf"
+        };
+
+        // Generate per-centre tasks based on onboarding dates
         centresData.forEach(({ Centre, OnboardingDate }) => {
-            const onboardingDate = new Date(OnboardingDate);
-            const prePrepEnd = new Date(onboardingDate);
-            prePrepEnd.setMonth(prePrepEnd.getMonth() + 2); // 2 months for pre-preparation
+            const onboarding = new Date(OnboardingDate);
+            const prePrepEnd = new Date(onboarding);
+            prePrepEnd.setMonth(prePrepEnd.getMonth() + 2); // Pre-Preparation (2 months)
 
-            const clinic3Date = new Date(prePrepEnd);
-            clinic3Date.setMonth(clinic3Date.getMonth() + 12); // 12 months for clinic appointments
+            const baselineStart = new Date(prePrepEnd);
+            const clinic1Start = new Date(baselineStart);
+            clinic1Start.setMonth(clinic1Start.getMonth() + 3); // Clinic 1 (3 months after baseline)
+            const clinic2Start = new Date(clinic1Start);
+            clinic2Start.setMonth(clinic2Start.getMonth() + 3); // Clinic 2 (3 months after Clinic 1)
+            const clinic3Start = new Date(clinic2Start);
+            clinic3Start.setMonth(clinic3Start.getMonth() + 3); // Clinic 3 (3 months after Clinic 2)
 
-            const quantSurveyEnd = new Date(clinic3Date);
-            quantSurveyEnd.setDate(quantSurveyEnd.getDate() + 10); // 10 days for quant survey
+            const quantSurveyEnd = new Date(clinic3Start);
+            quantSurveyEnd.setDate(quantSurveyEnd.getDate() + 10); // Quant Survey (10 days after Clinic 3)
 
-            const qualDataEnd = new Date(clinic3Date);
-            qualDataEnd.setMonth(qualDataEnd.getMonth() + 3); // 3 months for qualitative data collection
+            const qualDataEnd = new Date(clinic3Start);
+            qualDataEnd.setMonth(qualDataEnd.getMonth() + 3); // Qualitative Data Collection (3 months after Clinic 3)
 
-            // Add tasks for each centre
             tasks.push(
-                { Task: "Pre-Preparation", Centre, Start: onboardingDate, End: prePrepEnd },
-                { Task: "Quantitative Survey", Centre, Start: clinic3Date, End: quantSurveyEnd },
-                { Task: "Qualitative Data Collection", Centre, Start: clinic3Date, End: qualDataEnd }
+                { Task: "Pre-Preparation", Centre, Start: onboarding, End: prePrepEnd },
+                { Task: "Baseline Data Collection", Centre, Start: prePrepEnd, End: clinic1Start },
+                { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic2Start },
+                { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic3Start },
+                { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: quantSurveyEnd },
+                { Task: "Quantitative Survey", Centre, Start: clinic3Start, End: quantSurveyEnd },
+                { Task: "Qualitative Data Collection", Centre, Start: clinic3Start, End: qualDataEnd }
             );
         });
 
-        // Calculate start of the global analysis tasks
+        // Add global tasks (analysis and reporting)
         const allFollowUpsComplete = tasks
             .filter(task => task.Task === "Qualitative Data Collection")
             .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
 
-        // Add global analysis tasks
         const effectivenessEvalEnd = new Date(allFollowUpsComplete);
         effectivenessEvalEnd.setMonth(effectivenessEvalEnd.getMonth() + 4); // 4 months for effectiveness evaluation
-
-        const reportWritingStart = effectivenessEvalEnd;
 
         tasks.push(
             { Task: "Effectiveness Evaluation", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
             { Task: "Process Evaluation & Qualitative Study", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
             { Task: "Economic Analysis Reporting", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
             { Task: "SWAT Analysis", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
-            { Task: "Report Writing & Publication", Centre: "Global", Start: reportWritingStart, End: projectEndDate },
-            { Task: "Knowledge Translation & Dissemination", Centre: "Global", Start: reportWritingStart, End: projectEndDate }
+            { Task: "Report Writing & Publication", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate },
+            { Task: "Knowledge Translation & Dissemination", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate }
         );
 
         // Prepare data for Plotly
@@ -98,7 +115,7 @@
 
         // Define layout
         const layout = {
-            title: "Detailed Trial Timeline",
+            title: "Expanded Trial Timeline",
             xaxis: {
                 title: "Date",
                 type: "date",
