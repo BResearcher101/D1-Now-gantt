@@ -10,10 +10,10 @@
     <!-- Navigation Bar -->
     <nav>
         <a href="index.html">Home</a> |
-        <a href="new_page.html">Expanded Timeline</a>
+        <a href="new_page.html">Evaluation & Publication Timeline</a>
     </nav>
 
-    <h1>Expanded Trial Timeline</h1>
+    <h1>Evaluation & Publication Timeline</h1>
     <div id="timeline"></div>
 
     <script>
@@ -43,15 +43,12 @@
             "Clinic Appointment 1": "#2ca02c",
             "Clinic Appointment 2": "#d62728",
             "Clinic Appointment 3": "#9467bd",
-            "Follow-Up Activities": "#8c564b",
             "Quantitative Survey": "#e377c2",
             "Qualitative Data Collection": "#7f7f7f",
             "Effectiveness Evaluation": "#bcbd22",
-            "Economic Analysis Reporting": "#17becf",
-            "Process Evaluation & Qualitative Study": "#d62728",
-            "SWAT Analysis": "#e377c2",
-            "Report Writing & Publication": "#8c564b",
-            "Knowledge Translation & Dissemination": "#17becf"
+            "Health Economics Reporting": "#17becf",
+            "SWAT Analysis": "#d62728",
+            "Report Writing & Dissemination": "#8c564b",
         };
 
         // Generate per-centre tasks based on onboarding dates
@@ -85,21 +82,23 @@
             );
         });
 
-        // Add global tasks (analysis and reporting)
-        const allFollowUpsComplete = tasks
+        // Add global evaluation tasks
+        const lastQuantComplete = tasks
+            .filter(task => task.Task === "Quantitative Survey")
+            .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
+
+        const lastQualComplete = tasks
             .filter(task => task.Task === "Qualitative Data Collection")
             .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
 
-        const effectivenessEvalEnd = new Date(allFollowUpsComplete);
-        effectivenessEvalEnd.setMonth(effectivenessEvalEnd.getMonth() + 4); // 4 months for effectiveness evaluation
+        const analysisEnd = new Date(lastQualComplete);
+        analysisEnd.setMonth(analysisEnd.getMonth() + 4); // 4 months for all analyses
 
         tasks.push(
-            { Task: "Effectiveness Evaluation", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
-            { Task: "Process Evaluation & Qualitative Study", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
-            { Task: "Economic Analysis Reporting", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
-            { Task: "SWAT Analysis", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
-            { Task: "Report Writing & Publication", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate },
-            { Task: "Knowledge Translation & Dissemination", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate }
+            { Task: "Effectiveness Evaluation", Centre: "Evaluation & Publication", Start: lastQuantComplete, End: analysisEnd },
+            { Task: "Health Economics Reporting", Centre: "Evaluation & Publication", Start: lastQuantComplete, End: analysisEnd },
+            { Task: "SWAT Analysis", Centre: "Evaluation & Publication", Start: lastQualComplete, End: analysisEnd },
+            { Task: "Report Writing & Dissemination", Centre: "Evaluation & Publication", Start: analysisEnd, End: projectEndDate }
         );
 
         // Prepare data for Plotly
@@ -115,7 +114,7 @@
 
         // Define layout
         const layout = {
-            title: "Expanded Trial Timeline",
+            title: "Evaluation & Publication Timeline",
             xaxis: {
                 title: "Date",
                 type: "date",
@@ -126,7 +125,7 @@
                 automargin: true,
             },
             margin: {
-                l: 200, // Space for longer task names
+                l: 250, // Space for longer task names
             },
         };
 
