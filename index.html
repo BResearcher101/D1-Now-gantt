@@ -109,7 +109,8 @@
                 mode: "lines+markers",
                 line: { width: 10, color: activityColours[item.Activity] },
                 name: item.Activity,
-                hoverinfo: "name+x",
+                hoverinfo: "x",  // Show date only on hover
+                text: `${new Date(item.Start).toLocaleString('default', { month: 'long' })} to ${new Date(item.End).toLocaleString('default', { month: 'long' })}`
             }));
 
             // Define layout
