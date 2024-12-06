@@ -69,31 +69,26 @@
         document.getElementById("generate-timeline").addEventListener("click", () => {
             const formData = new FormData(document.getElementById("onboarding-form"));
             const centres = [];
-            const durations = []; // To store durations for each centre
 
             for (let i = 1; i <= 12; i++) {
                 const onboardingDate = new Date(formData.get(`centre${i}`));
                 const recruitmentEnd = new Date(onboardingDate);
                 recruitmentEnd.setDate(recruitmentEnd.getDate() + 15);
                 const baselineStart = new Date(recruitmentEnd);
-                const clinic1Start = new Date(baselineStart);
-                clinic1Start.setMonth(clinic1Start.getMonth() + 3);
-                const clinic2Start = new Date(clinic1Start);
-                clinic2Start.setMonth(clinic2Start.getMonth() + 3);
-                const clinic3Start = new Date(clinic2Start);
-                clinic3Start.setMonth(clinic3Start.getMonth() + 3);
 
-                // Calculate duration from onboarding to Clinic Appointment 3
-                const durationDays = Math.ceil((clinic3Start - onboardingDate) / (1000 * 60 * 60 * 24));
-                const durationMonths = Math.floor(durationDays / 30);
-                durations.push({ Centre: `Centre ${i}`, Duration: `${durationMonths} months` });
+                // Calculate time intervals to fit within 12 months
+                const clinic1Start = new Date(baselineStart);
+                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // First 4-month gap
+                const clinic2Start = new Date(clinic1Start);
+                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // Second 4-month gap
+                const clinic3Start = new Date(clinic2Start);
+                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // Third 4-month gap
 
                 centres.push(
                     { Centre: `Centre ${i}`, Activity: "Onboarding", Start: onboardingDate, End: recruitmentEnd },
                     { Centre: `Centre ${i}`, Activity: "Baseline Data Collection", Start: baselineStart, End: clinic1Start },
                     { Centre: `Centre ${i}`, Activity: "Clinic Appointment 1", Start: clinic1Start, End: clinic2Start },
-                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 2", Start: clinic2Start, End: clinic3Start },
-                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 3", Start: clinic3Start, End: clinic3Start }
+                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 2", Start: clinic2Start, End: clinic3Start }
                 );
             }
 
@@ -105,8 +100,7 @@
                 mode: "lines+markers",
                 line: { width: 10 },
                 name: item.Activity,
-                hoverinfo: "name+x+text",
-                text: durations.find(d => d.Centre === item.Centre).Duration,
+                hoverinfo: "name+x",
             }));
 
             // Define layout
