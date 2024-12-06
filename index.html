@@ -69,6 +69,7 @@
         document.getElementById("generate-timeline").addEventListener("click", () => {
             const formData = new FormData(document.getElementById("onboarding-form"));
             const centres = [];
+            const durations = []; // To store durations for each centre
 
             for (let i = 1; i <= 12; i++) {
                 const onboardingDate = new Date(formData.get(`centre${i}`));
@@ -82,11 +83,17 @@
                 const clinic3Start = new Date(clinic2Start);
                 clinic3Start.setMonth(clinic3Start.getMonth() + 3);
 
+                // Calculate duration from onboarding to Clinic Appointment 3
+                const durationDays = Math.ceil((clinic3Start - onboardingDate) / (1000 * 60 * 60 * 24));
+                const durationMonths = Math.floor(durationDays / 30);
+                durations.push({ Centre: `Centre ${i}`, Duration: `${durationMonths} months` });
+
                 centres.push(
                     { Centre: `Centre ${i}`, Activity: "Onboarding", Start: onboardingDate, End: recruitmentEnd },
                     { Centre: `Centre ${i}`, Activity: "Baseline Data Collection", Start: baselineStart, End: clinic1Start },
                     { Centre: `Centre ${i}`, Activity: "Clinic Appointment 1", Start: clinic1Start, End: clinic2Start },
-                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 2", Start: clinic2Start, End: clinic3Start }
+                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 2", Start: clinic2Start, End: clinic3Start },
+                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 3", Start: clinic3Start, End: clinic3Start }
                 );
             }
 
@@ -98,7 +105,8 @@
                 mode: "lines+markers",
                 line: { width: 10 },
                 name: item.Activity,
-                hoverinfo: "name+x",
+                hoverinfo: "name+x+text",
+                text: durations.find(d => d.Centre === item.Centre).Duration,
             }));
 
             // Define layout
