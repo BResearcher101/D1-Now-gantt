@@ -1,35 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Trial Activity Timeline</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <div id="gantt-chart"></div>
+    <h1>Dynamic Trial Activity Timeline</h1>
+    <div id="timeline"></div>
+
+    <!-- JavaScript to Create the Gantt Chart -->
     <script>
-        const tasks = [
-            { name: "Task A", start: "2024-12-01", end: "2024-12-10" },
-            { name: "Task B", start: "2024-12-05", end: "2024-12-15" },
+        // Trial activity data for 12 centres
+        const trialData = [
+            { Centre: "Centre 1", Activity: "Onboarding", Start: "2025-05-01", End: "2025-05-15" },
+            { Centre: "Centre 1", Activity: "Baseline Data Collection", Start: "2025-05-16", End: "2025-08-15" },
+            { Centre: "Centre 1", Activity: "Clinic Appointment 1", Start: "2025-08-16", End: "2025-11-15" },
+            { Centre: "Centre 1", Activity: "Clinic Appointment 2", Start: "2025-11-16", End: "2026-02-15" },
+            { Centre: "Centre 2", Activity: "Onboarding", Start: "2025-06-01", End: "2025-06-15" },
+            { Centre: "Centre 2", Activity: "Baseline Data Collection", Start: "2025-06-16", End: "2025-09-15" },
+            { Centre: "Centre 2", Activity: "Clinic Appointment 1", Start: "2025-09-16", End: "2025-12-15" },
+            { Centre: "Centre 2", Activity: "Clinic Appointment 2", Start: "2025-12-16", End: "2026-03-15" },
+            { Centre: "Centre 3", Activity: "Onboarding", Start: "2025-07-01", End: "2025-07-15" },
+            { Centre: "Centre 3", Activity: "Baseline Data Collection", Start: "2025-07-16", End: "2025-10-15" },
+            { Centre: "Centre 3", Activity: "Clinic Appointment 1", Start: "2025-10-16", End: "2026-01-15" },
+            { Centre: "Centre 3", Activity: "Clinic Appointment 2", Start: "2026-01-16", End: "2026-04-15" },
+            { Centre: "Centre 4", Activity: "Onboarding", Start: "2025-08-01", End: "2025-08-15" },
+            { Centre: "Centre 4", Activity: "Baseline Data Collection", Start: "2025-08-16", End: "2025-11-15" },
+            { Centre: "Centre 4", Activity: "Clinic Appointment 1", Start: "2025-11-16", End: "2026-02-15" },
+            { Centre: "Centre 4", Activity: "Clinic Appointment 2", Start: "2026-02-16", End: "2026-05-15" },
+            { Centre: "Centre 5", Activity: "Onboarding", Start: "2025-09-01", End: "2025-09-15" },
+            { Centre: "Centre 5", Activity: "Baseline Data Collection", Start: "2025-09-16", End: "2025-12-15" },
+            { Centre: "Centre 5", Activity: "Clinic Appointment 1", Start: "2025-12-16", End: "2026-03-15" },
+            { Centre: "Centre 5", Activity: "Clinic Appointment 2", Start: "2026-03-16", End: "2026-06-15" },
+            // Add remaining centres and activities here...
         ];
 
-        const width = 800, height = 200, barHeight = 20;
+        // Prepare data for Plotly Gantt chart
+        const plotData = trialData.map(item => ({
+            x: [item.Start, item.End],
+            y: [item.Centre, item.Centre],
+            type: "scatter",
+            mode: "lines+markers",
+            line: { width: 10 },
+            name: item.Activity,
+            hoverinfo: "name+x",
+        }));
 
-        const svg = d3.select("#gantt-chart")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+        // Define layout
+        const layout = {
+            title: "Dynamic Trial Activity Timeline",
+            xaxis: {
+                title: "Date",
+                type: "date",
+                tickformat: "%b-%Y",
+            },
+            yaxis: {
+                title: "Centres",
+                automargin: true,
+            },
+            margin: {
+                l: 150, // Space for long Centre names
+            },
+        };
 
-        const xScale = d3.scaleTime()
-            .domain([new Date("2024-12-01"), new Date("2024-12-31")])
-            .range([0, width]);
-
-        tasks.forEach((task, i) => {
-            svg.append("rect")
-                .attr("x", xScale(new Date(task.start)))
-                .attr("y", i * (barHeight + 5))
-                .attr("width", xScale(new Date(task.end)) - xScale(new Date(task.start)))
-                .attr("height", barHeight)
-                .attr("fill", "steelblue");
-        });
+        // Render the Plotly chart
+        Plotly.newPlot("timeline", plotData, layout);
     </script>
 </body>
 </html>
