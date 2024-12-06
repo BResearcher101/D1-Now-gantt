@@ -3,141 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Trial Activity Timeline</title>
+    <title>Expanded Trial Timeline</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-        <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav>
-        <a href="index.html">Gantt Chart - Intervention</a> |
-        <a href="new_page.html">Gantt Chart - Detailed Brekadown</a>
+        <a href="index.html">Home</a> |
+        <a href="new_page.html">Expanded Timeline</a>
     </nav>
-    <h1>Dynamic Trial Activity Timeline</h1>
-    <div>
-        <h3>Enter Onboarding Dates for Centres</h3>
-        <form id="onboarding-form">
-            <!-- Form for user inputs -->
-            <div>
-                <label for="centre1">Centre 1:</label>
-                <input type="date" id="centre1" name="centre1" value="2025-05-01">
-            </div>
-            <div>
-                <label for="centre2">Centre 2:</label>
-                <input type="date" id="centre2" name="centre2" value="2025-06-01">
-            </div>
-            <div>
-                <label for="centre3">Centre 3:</label>
-                <input type="date" id="centre3" name="centre3" value="2025-07-01">
-            </div>
-            <div>
-                <label for="centre4">Centre 4:</label>
-                <input type="date" id="centre4" name="centre4" value="2025-08-01">
-            </div>
-            <div>
-                <label for="centre5">Centre 5:</label>
-                <input type="date" id="centre5" name="centre5" value="2025-09-01">
-            </div>
-            <div>
-                <label for="centre6">Centre 6:</label>
-                <input type="date" id="centre6" name="centre6" value="2025-10-01">
-            </div>
-            <div>
-                <label for="centre7">Centre 7:</label>
-                <input type="date" id="centre7" name="centre7" value="2025-11-01">
-            </div>
-            <div>
-                <label for="centre8">Centre 8:</label>
-                <input type="date" id="centre8" name="centre8" value="2025-12-01">
-            </div>
-            <div>
-                <label for="centre9">Centre 9:</label>
-                <input type="date" id="centre9" name="centre9" value="2026-01-01">
-            </div>
-            <div>
-                <label for="centre10">Centre 10:</label>
-                <input type="date" id="centre10" name="centre10" value="2026-03-01">
-            </div>
-            <div>
-                <label for="centre11">Centre 11:</label>
-                <input type="date" id="centre11" name="centre11" value="2026-05-01">
-            </div>
-            <div>
-                <label for="centre12">Centre 12:</label>
-                <input type="date" id="centre12" name="centre12" value="2026-07-01">
-            </div>
-            <button type="button" id="generate-timeline">Generate Timeline</button>
-        </form>
-    </div>
+
+    <h1>Expanded Trial Timeline</h1>
     <div id="timeline"></div>
 
     <script>
-        // Define colours for each activity
-        const activityColours = {
-            "Onboarding": "#1f77b4",  // Blue
-            "Baseline Data Collection": "#ff7f0e",  // Orange
-            "Clinic Appointment 1": "#2ca02c",  // Green
-            "Clinic Appointment 2": "#d62728",  // Red
+        // Assume onboarding dates from the first page (example for all 12 centres)
+        const centresData = [
+            { Centre: "Centre 1", OnboardingDate: "2025-05-01" },
+            { Centre: "Centre 2", OnboardingDate: "2025-06-01" },
+            { Centre: "Centre 3", OnboardingDate: "2025-07-01" },
+            { Centre: "Centre 4", OnboardingDate: "2025-08-01" },
+            { Centre: "Centre 5", OnboardingDate: "2025-09-01" },
+            { Centre: "Centre 6", OnboardingDate: "2025-10-01" },
+            { Centre: "Centre 7", OnboardingDate: "2025-11-01" },
+            { Centre: "Centre 8", OnboardingDate: "2025-12-01" },
+            { Centre: "Centre 9", OnboardingDate: "2026-01-01" },
+            { Centre: "Centre 10", OnboardingDate: "2026-03-01" },
+            { Centre: "Centre 11", OnboardingDate: "2026-05-01" },
+            { Centre: "Centre 12", OnboardingDate: "2026-07-01" },
+        ];
+
+        const tasks = [];
+        const projectEndDate = new Date("2028-05-31");
+
+        // Colours for each type of task
+        const taskColours = {
+            "Pre-Preparation": "#1f77b4",
+            "Baseline Data Collection": "#ff7f0e",
+            "Clinic Appointment 1": "#2ca02c",
+            "Clinic Appointment 2": "#d62728",
+            "Clinic Appointment 3": "#9467bd",
+            "Follow-Up Activities": "#8c564b",
+            "Quantitative Survey": "#e377c2",
+            "Qualitative Data Collection": "#7f7f7f",
+            "Effectiveness Evaluation": "#bcbd22",
+            "Economic Analysis Reporting": "#17becf",
+            "Process Evaluation & Qualitative Study": "#d62728",
+            "SWAT Analysis": "#e377c2",
+            "Report Writing & Publication": "#8c564b",
+            "Knowledge Translation & Dissemination": "#17becf"
         };
 
-        // Generate trial activity data dynamically based on user inputs
-        document.getElementById("generate-timeline").addEventListener("click", () => {
-            const formData = new FormData(document.getElementById("onboarding-form"));
-            const centres = [];
+        // Generate per-centre tasks based on onboarding dates
+        centresData.forEach(({ Centre, OnboardingDate }) => {
+            const onboarding = new Date(OnboardingDate);
+            const prePrepEnd = new Date(onboarding);
+            prePrepEnd.setMonth(prePrepEnd.getMonth() + 2); // Pre-Preparation (2 months)
 
-            for (let i = 1; i <= 12; i++) {
-                const onboardingDate = new Date(formData.get(`centre${i}`));
-                const recruitmentEnd = new Date(onboardingDate);
-                recruitmentEnd.setDate(recruitmentEnd.getDate() + 15);
-                const baselineStart = new Date(recruitmentEnd);
+            const baselineStart = new Date(prePrepEnd);
+            const clinic1Start = new Date(baselineStart);
+            clinic1Start.setMonth(clinic1Start.getMonth() + 3); // Clinic 1 (3 months after baseline)
+            const clinic2Start = new Date(clinic1Start);
+            clinic2Start.setMonth(clinic2Start.getMonth() + 3); // Clinic 2 (3 months after Clinic 1)
+            const clinic3Start = new Date(clinic2Start);
+            clinic3Start.setMonth(clinic3Start.getMonth() + 3); // Clinic 3 (3 months after Clinic 2)
 
-                // Calculate time intervals to fit within 12 months
-                const clinic1Start = new Date(baselineStart);
-                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // First 4-month gap
-                const clinic2Start = new Date(clinic1Start);
-                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // Second 4-month gap
-                const clinic3Start = new Date(clinic2Start);
-                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // Third 4-month gap
+            const quantSurveyEnd = new Date(clinic3Start);
+            quantSurveyEnd.setDate(quantSurveyEnd.getDate() + 10); // Quant Survey (10 days after Clinic 3)
 
-                centres.push(
-                    { Centre: `Centre ${i}`, Activity: "Onboarding", Start: onboardingDate, End: recruitmentEnd },
-                    { Centre: `Centre ${i}`, Activity: "Baseline Data Collection", Start: baselineStart, End: clinic1Start },
-                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 1", Start: clinic1Start, End: clinic2Start },
-                    { Centre: `Centre ${i}`, Activity: "Clinic Appointment 2", Start: clinic2Start, End: clinic3Start }
-                );
-            }
+            const qualDataEnd = new Date(clinic3Start);
+            qualDataEnd.setMonth(qualDataEnd.getMonth() + 3); // Qualitative Data Collection (3 months after Clinic 3)
 
-            // Prepare data for Plotly Gantt chart
-            const plotData = centres.map(item => ({
-                x: [item.Start.toISOString().split("T")[0], item.End.toISOString().split("T")[0]],
-                y: [item.Centre, item.Centre],
-                type: "scatter",
-                mode: "lines+markers",
-                line: { width: 10, color: activityColours[item.Activity] },
-                name: item.Activity,
-                hoverinfo: "x",  // Show date only on hover
-                text: `${new Date(item.Start).toLocaleString('default', { month: 'long' })} to ${new Date(item.End).toLocaleString('default', { month: 'long' })}`
-            }));
-
-            // Define layout
-            const layout = {
-                title: "Dynamic Trial Activity Timeline",
-                xaxis: {
-                    title: "Date",
-                    type: "date",
-                    tickformat: "%b-%Y",
-                },
-                yaxis: {
-                    title: "Centres",
-                    automargin: true,
-                },
-                margin: {
-                    l: 150, // Space for long Centre names
-                },
-            };
-
-            // Render the Plotly chart
-            Plotly.newPlot("timeline", plotData, layout);
+            tasks.push(
+                { Task: "Pre-Preparation", Centre, Start: onboarding, End: prePrepEnd },
+                { Task: "Baseline Data Collection", Centre, Start: prePrepEnd, End: clinic1Start },
+                { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic2Start },
+                { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic3Start },
+                { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: quantSurveyEnd },
+                { Task: "Quantitative Survey", Centre, Start: clinic3Start, End: quantSurveyEnd },
+                { Task: "Qualitative Data Collection", Centre, Start: clinic3Start, End: qualDataEnd }
+            );
         });
+
+        // Add global tasks (analysis and reporting)
+        const allFollowUpsComplete = tasks
+            .filter(task => task.Task === "Qualitative Data Collection")
+            .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
+
+        const effectivenessEvalEnd = new Date(allFollowUpsComplete);
+        effectivenessEvalEnd.setMonth(effectivenessEvalEnd.getMonth() + 4); // 4 months for effectiveness evaluation
+
+        tasks.push(
+            { Task: "Effectiveness Evaluation", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
+            { Task: "Process Evaluation & Qualitative Study", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
+            { Task: "Economic Analysis Reporting", Centre: "Global", Start: allFollowUpsComplete, End: effectivenessEvalEnd },
+            { Task: "SWAT Analysis", Centre: "Global", Start: allFollowUpsComplete, End: projectEndDate },
+            { Task: "Report Writing & Publication", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate },
+            { Task: "Knowledge Translation & Dissemination", Centre: "Global", Start: effectivenessEvalEnd, End: projectEndDate }
+        );
+
+        // Prepare data for Plotly
+        const plotData = tasks.map(task => ({
+            x: [task.Start.toISOString().split("T")[0], task.End.toISOString().split("T")[0]],
+            y: [task.Centre, task.Centre],
+            type: "scatter",
+            mode: "lines+markers",
+            line: { width: 10, color: taskColours[task.Task] },
+            name: task.Task,
+            hoverinfo: "name+x"
+        }));
+
+        // Define layout
+        const layout = {
+            title: "Expanded Trial Timeline",
+            xaxis: {
+                title: "Date",
+                type: "date",
+                tickformat: "%b-%Y",
+            },
+            yaxis: {
+                title: "Centres",
+                automargin: true,
+            },
+            margin: {
+                l: 200, // Space for longer task names
+            },
+        };
+
+        // Render the Plotly chart
+        Plotly.newPlot("timeline", plotData, layout);
     </script>
 </body>
 </html>
