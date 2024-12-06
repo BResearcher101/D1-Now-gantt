@@ -11,6 +11,7 @@
     <div>
         <h3>Enter Onboarding Dates for Centres</h3>
         <form id="onboarding-form">
+            <!-- Form for user inputs -->
             <div>
                 <label for="centre1">Centre 1:</label>
                 <input type="date" id="centre1" name="centre1" value="2025-05-01">
@@ -65,6 +66,14 @@
     <div id="timeline"></div>
 
     <script>
+        // Define colours for each activity
+        const activityColours = {
+            "Onboarding": "#1f77b4",  // Blue
+            "Baseline Data Collection": "#ff7f0e",  // Orange
+            "Clinic Appointment 1": "#2ca02c",  // Green
+            "Clinic Appointment 2": "#d62728",  // Red
+        };
+
         // Generate trial activity data dynamically based on user inputs
         document.getElementById("generate-timeline").addEventListener("click", () => {
             const formData = new FormData(document.getElementById("onboarding-form"));
@@ -98,7 +107,7 @@
                 y: [item.Centre, item.Centre],
                 type: "scatter",
                 mode: "lines+markers",
-                line: { width: 10 },
+                line: { width: 10, color: activityColours[item.Activity] },
                 name: item.Activity,
                 hoverinfo: "name+x",
             }));
