@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <div id="gantt-chart"></div>
+    <script>
+        const tasks = [
+            { name: "Task A", start: "2024-12-01", end: "2024-12-10" },
+            { name: "Task B", start: "2024-12-05", end: "2024-12-15" },
+        ];
+
+        const width = 800, height = 200, barHeight = 20;
+
+        const svg = d3.select("#gantt-chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const xScale = d3.scaleTime()
+            .domain([new Date("2024-12-01"), new Date("2024-12-31")])
+            .range([0, width]);
+
+        tasks.forEach((task, i) => {
+            svg.append("rect")
+                .attr("x", xScale(new Date(task.start)))
+                .attr("y", i * (barHeight + 5))
+                .attr("width", xScale(new Date(task.end)) - xScale(new Date(task.start)))
+                .attr("height", barHeight)
+                .attr("fill", "steelblue");
+        });
+    </script>
+</body>
+</html>
