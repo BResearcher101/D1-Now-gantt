@@ -49,7 +49,8 @@
             "Health Economics": "#17becf",
             "Process Evaluation": "#8c564b",
             "SWAT Analysis": "#9467bd",
-            "Report Writing & Dissemination": "#bcbd22",
+            "Report Writing": "#bcbd22",
+            "Knowledge Translation": "#bcbd22",
         };
 
         // Generate per-centre tasks based on onboarding dates
@@ -83,7 +84,7 @@
             );
         });
 
-        // Add evaluation and publication tasks
+        // Add evaluation and analysis tasks
         const allFollowUpsComplete = tasks
             .filter(task => task.Task === "Quantitative Survey")
             .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
@@ -100,7 +101,8 @@
             { Task: "Health Economics", Centre: "Evaluation and Publication", Start: evalStart, End: new Date(evalStart.getFullYear(), evalStart.getMonth() + 4, evalStart.getDate()) },
             { Task: "Process Evaluation", Centre: "Evaluation and Publication", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
             { Task: "SWAT Analysis", Centre: "Evaluation and Publication", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
-            { Task: "Report Writing & Dissemination", Centre: "Evaluation and Publication", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate }
+            { Task: "Report Writing", Centre: "Evaluation and Publication", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate },
+            { Task: "Knowledge Translation", Centre: "Evaluation and Publication", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate }
         );
 
         // Prepare data for Plotly
