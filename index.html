@@ -68,6 +68,19 @@
     <div id="timeline"></div>
 
     <script>
+        
+    function saveOnboardingDates() {
+        const formData = new FormData(document.getElementById("onboarding-form"));
+        const centresData = [];
+        for (let i = 1; i <= 12; i++) {
+            const onboardingDate = formData.get(`centre${i}`);
+            centresData.push({ Centre: `Centre ${i}`, OnboardingDate: onboardingDate });
+        }
+        localStorage.setItem("onboardingDates", JSON.stringify(centresData));
+    }
+
+    document.getElementById("generate-timeline").addEventListener("click", () => {
+        saveOnboardingDates(); 
         // Define colours for each activity
         const activityColours = {
             "Onboarding": "#1f77b4",  // Blue
@@ -75,6 +88,7 @@
             "Clinic Appointment 1": "#2ca02c",  // Green
             "Clinic Appointment 2": "#d62728",  // Red
         };
+        
 
         // Generate trial activity data dynamically based on user inputs
         document.getElementById("generate-timeline").addEventListener("click", () => {
