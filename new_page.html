@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expanded Trial Timeline</title>
+    <title>Expanded Study Timeline</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
@@ -84,7 +84,7 @@
             );
         });
 
-        // Add evaluation and analysis tasks
+        // Add evaluation and analysis tasks (one row per task)
         const allFollowUpsComplete = tasks
             .filter(task => task.Task === "Quantitative Survey")
             .reduce((latest, task) => new Date(Math.max(latest, task.End)), new Date(0));
@@ -97,12 +97,12 @@
         const qualStart = qualEnd; // Qualitative starts after all qualitative data collection
 
         tasks.push(
-            { Task: "Effectiveness Evaluation", Centre: "Evaluation and Publication", Start: evalStart, End: new Date(evalStart.getFullYear(), evalStart.getMonth() + 4, evalStart.getDate()) },
-            { Task: "Health Economics", Centre: "Evaluation and Publication", Start: evalStart, End: new Date(evalStart.getFullYear(), evalStart.getMonth() + 4, evalStart.getDate()) },
-            { Task: "Process Evaluation", Centre: "Evaluation and Publication", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
-            { Task: "SWAT Analysis", Centre: "Evaluation and Publication", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
-            { Task: "Report Writing", Centre: "Evaluation and Publication", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate },
-            { Task: "Knowledge Translation", Centre: "Evaluation and Publication", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate }
+            { Task: "Effectiveness Evaluation", Centre: "Effectiveness Evaluation", Start: evalStart, End: new Date(evalStart.getFullYear(), evalStart.getMonth() + 4, evalStart.getDate()) },
+            { Task: "Health Economics", Centre: "Health Economics", Start: evalStart, End: new Date(evalStart.getFullYear(), evalStart.getMonth() + 4, evalStart.getDate()) },
+            { Task: "Process Evaluation", Centre: "Process Evaluation", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
+            { Task: "SWAT Analysis", Centre: "SWAT Analysis", Start: qualStart, End: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()) },
+            { Task: "Report Writing", Centre: "Report Writing", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate },
+            { Task: "Knowledge Translation", Centre: "Knowledge Translation", Start: new Date(qualStart.getFullYear(), qualStart.getMonth() + 4, qualStart.getDate()), End: projectEndDate }
         );
 
         // Prepare data for Plotly
@@ -125,7 +125,7 @@
                 tickformat: "%b-%Y",
             },
             yaxis: {
-                title: "Centres and Evaluation Tasks",
+                title: "Tasks and Centres",
                 automargin: true,
             },
             margin: {
