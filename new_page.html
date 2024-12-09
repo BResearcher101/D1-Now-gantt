@@ -1,38 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expanded Study Timeline</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <nav>
-        <a href="index.html">Home</a> |
-        <a href="new_page.html">Expanded Timeline</a>
-    </nav>
-
-    <h1>Expanded Trial Timeline</h1>
-    <div id="timeline"></div>
-
-    <script>
-        // Assume onboarding dates from the first page (example for all 12 centres)
-        const centresData = [
-            { Centre: "Centre 1", OnboardingDate: "2025-05-01" },
-            { Centre: "Centre 2", OnboardingDate: "2025-06-01" },
-            { Centre: "Centre 3", OnboardingDate: "2025-07-01" },
-            { Centre: "Centre 4", OnboardingDate: "2025-08-01" },
-            { Centre: "Centre 5", OnboardingDate: "2025-09-01" },
-            { Centre: "Centre 6", OnboardingDate: "2025-10-01" },
-            { Centre: "Centre 7", OnboardingDate: "2025-11-01" },
-            { Centre: "Centre 8", OnboardingDate: "2025-12-01" },
-            { Centre: "Centre 9", OnboardingDate: "2026-01-01" },
-            { Centre: "Centre 10", OnboardingDate: "2026-03-01" },
-            { Centre: "Centre 11", OnboardingDate: "2026-05-01" },
-            { Centre: "Centre 12", OnboardingDate: "2026-07-01" },
-        ];
-
+<script>
+    const storedData = localStorage.getItem("onboardingDates");
+    if (!storedData) {
+        alert("No onboarding data found! Please generate the timeline on the Home page first.");
+    } else {
+        const centresData = JSON.parse(storedData);
         const tasks = [];
         const projectEndDate = new Date("2028-05-31");
 
@@ -135,6 +106,5 @@
 
         // Render the Plotly chart
         Plotly.newPlot("timeline", plotData, layout);
-    </script>
-</body>
-</html>
+    }
+</script>
