@@ -113,13 +113,7 @@
             mode: "lines+markers",
             line: { width: 10, color: taskColours[task.Task] },
             name: task.Task,
-            hovertemplate: `
-                <b>${task.Task}</b><br>
-                Centre: ${task.Centre}<br>
-                Start: %{x[0]}<br>
-                End: %{x[1]}<br>
-                <extra></extra>
-            `,
+            hoverinfo: "name+x"
         }));
 
         // Define layout
