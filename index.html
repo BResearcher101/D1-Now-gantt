@@ -107,13 +107,13 @@
                 supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 3); // Support worker integration until Clinic Appointment 1
 
                 const clinic1Start = new Date(baselineStart);
-                clinic1Start.setMonth(clinic1Start.getMonth() + 3); // 3 months for Clinic 1
+                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // 3 months for Clinic 1
 
                 const clinic2Start = new Date(clinic1Start);
-                clinic2Start.setMonth(clinic2Start.getMonth() + 3); // 3 months for Clinic 2
+                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // 3 months for Clinic 2
 
                 const clinic3Start = new Date(clinic2Start);
-                clinic3Start.setMonth(clinic3Start.getMonth() + 3); // 3 months for Clinic 3
+                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // 3 months for Clinic 3
 
                 tasks.push(
                     { Task: "Ethics Approval", Centre, Start: ethicsApproval, End: onboardingEnd },
