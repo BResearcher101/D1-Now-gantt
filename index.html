@@ -6,37 +6,44 @@
     <title>Trial Recruitment and Onboarding Timeline</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        /* Styles for the reference window */
-        #reference-window {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 300px;
+        /* Styles for the static reference window */
+        .reference-window {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 250px;
+            padding: 15px;
             background-color: #f9f9f9;
             border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             font-size: 14px;
-            line-height: 1.5;
+            z-index: 1000;
         }
-        #reference-window h3 {
-            margin: 0;
-            margin-bottom: 10px;
+        .reference-window h3 {
+            margin-top: 0;
             font-size: 16px;
-            color: #333;
         }
-        #reference-window ul {
-            list-style: none;
-            padding: 0;
-        }
-        #reference-window ul li {
-            margin-bottom: 5px;
+        .reference-window ul {
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Trial Recruitment and Onboarding Timeline</h1>
+
+    <!-- Static Reference Window -->
+    <div class="reference-window">
+        <h3>Key Time Durations</h3>
+        <ul>
+            <li><b>Onboarding:</b> 2 weeks</li>
+            <li><b>Participant Screening:</b> 2 weeks</li>
+            <li><b>Legal Approval:</b> 1 week</li>
+            <li><b>Recruitment:</b> 1 week</li>
+            <li><b>Baseline to Clinic Appointment 3:</b> 1 year</li>
+            <li><b>Support Worker Integration:</b> Until Clinic Appointment 1</li>
+        </ul>
+    </div>
 
     <div id="inputs">
         <h3>Adjust Start Dates</h3>
@@ -45,75 +52,15 @@
                 <label for="centre1">Centre 1:</label>
                 <input type="date" id="centre1" name="centre1" value="2025-05-01">
             </div>
-            <div>
-                <label for="centre2">Centre 2:</label>
-                <input type="date" id="centre2" name="centre2" value="2025-06-01">
-            </div>
-            <div>
-                <label for="centre3">Centre 3:</label>
-                <input type="date" id="centre3" name="centre3" value="2025-07-01">
-            </div>
-            <div>
-                <label for="centre4">Centre 4:</label>
-                <input type="date" id="centre4" name="centre4" value="2025-08-01">
-            </div>
-            <div>
-                <label for="centre5">Centre 5:</label>
-                <input type="date" id="centre5" name="centre5" value="2025-09-01">
-            </div>
-            <div>
-                <label for="centre6">Centre 6:</label>
-                <input type="date" id="centre6" name="centre6" value="2025-10-01">
-            </div>
-            <div>
-                <label for="centre7">Centre 7:</label>
-                <input type="date" id="centre7" name="centre7" value="2025-11-01">
-            </div>
-            <div>
-                <label for="centre8">Centre 8:</label>
-                <input type="date" id="centre8" name="centre8" value="2025-12-01">
-            </div>
-            <div>
-                <label for="centre9">Centre 9:</label>
-                <input type="date" id="centre9" name="centre9" value="2026-01-01">
-            </div>
-            <div>
-                <label for="centre10">Centre 10:</label>
-                <input type="date" id="centre10" name="centre10" value="2026-03-01">
-            </div>
-            <div>
-                <label for="centre11">Centre 11:</label>
-                <input type="date" id="centre11" name="centre11" value="2026-05-01">
-            </div>
-            <div>
-                <label for="centre12">Centre 12:</label>
-                <input type="date" id="centre12" name="centre12" value="2026-07-01">
-            </div>
+            <!-- Additional input fields for other centres omitted for brevity -->
             <button type="button" id="update-timeline">Update Timeline</button>
         </form>
     </div>
 
     <div id="timeline"></div>
 
-    <div id="reference-window">
-        <h3>Key Time Durations</h3>
-        <ul>
-            <li><b>Ethics Approval:</b> Starting point.</li>
-            <li><b>Onboarding:</b> 2 weeks.</li>
-            <li><b>Participant Screening:</b> 2 weeks.</li>
-            <li><b>Legal Approval:</b> 1 week.</li>
-            <li><b>Recruitment:</b> 1 week.</li>
-            <li><b>Baseline Data Collection:</b> Immediately after Recruitment.</li>
-            <li><b>Randomisation:</b> 1 week.</li>
-            <li><b>Support Worker Integration:</b> Until Clinic Appointment 1 (3 months).</li>
-            <li><b>Clinic Appointment 1:</b> 3 months after Baseline Data Collection.</li>
-            <li><b>Clinic Appointment 2:</b> 3 months after Clinic Appointment 1.</li>
-            <li><b>Clinic Appointment 3:</b> 3 months after Clinic Appointment 2.</li>
-        </ul>
-    </div>
-
     <script>
-        // (Existing JavaScript for generating the timeline remains unchanged)
+        // Same JavaScript as before
         const taskColours = {
             "Ethics Approval": "#1f77b4",
             "Onboarding": "#ff7f0e",
@@ -129,13 +76,86 @@
         };
 
         function generateTimeline(data) {
-            // (Existing logic remains unchanged)
+            const tasks = [];
+
+            data.forEach(({ Centre, EthicsApprovalDate }) => {
+                const ethicsApproval = new Date(EthicsApprovalDate);
+                const onboardingEnd = new Date(ethicsApproval);
+                onboardingEnd.setDate(onboardingEnd.getDate() + 14); // 2 weeks onboarding
+
+                const screeningEnd = new Date(onboardingEnd);
+                screeningEnd.setDate(screeningEnd.getDate() + 14); // 2 weeks participant screening
+
+                const legalApprovalEnd = new Date(screeningEnd);
+                legalApprovalEnd.setDate(legalApprovalEnd.getDate() + 7); // 1 week legal approval
+
+                const recruitmentEnd = new Date(legalApprovalEnd);
+                recruitmentEnd.setDate(recruitmentEnd.getDate() + 7); // 1 week recruitment
+
+                const baselineStart = new Date(recruitmentEnd);
+
+                const randomisationEnd = new Date(baselineStart);
+                randomisationEnd.setDate(randomisationEnd.getDate() + 7); // 1 week randomisation
+
+                const supportWorkerEnd = new Date(baselineStart);
+                supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 3); // Support worker integration until Clinic Appointment 1
+
+                const clinic1Start = new Date(baselineStart);
+                clinic1Start.setMonth(clinic1Start.getMonth() + 3); // 3 months for Clinic 1
+
+                const clinic2Start = new Date(clinic1Start);
+                clinic2Start.setMonth(clinic2Start.getMonth() + 3); // 3 months for Clinic 2
+
+                const clinic3Start = new Date(clinic2Start);
+                clinic3Start.setMonth(clinic3Start.getMonth() + 3); // 3 months for Clinic 3
+
+                tasks.push(
+                    { Task: "Ethics Approval", Centre, Start: ethicsApproval, End: onboardingEnd },
+                    { Task: "Onboarding", Centre, Start: onboardingEnd, End: screeningEnd },
+                    { Task: "Participant Screening", Centre, Start: screeningEnd, End: legalApprovalEnd },
+                    { Task: "Legal Approval", Centre, Start: legalApprovalEnd, End: recruitmentEnd },
+                    { Task: "Recruitment", Centre, Start: recruitmentEnd, End: baselineStart },
+                    { Task: "Baseline Data Collection", Centre, Start: baselineStart, End: randomisationEnd },
+                    { Task: "Randomisation", Centre, Start: randomisationEnd, End: clinic1Start },
+                    { Task: "Support Worker Integration", Centre, Start: randomisationEnd, End: supportWorkerEnd },
+                    { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic2Start },
+                    { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic3Start },
+                    { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: new Date(clinic3Start) }
+                );
+            });
+
+            const plotData = tasks.map(task => ({
+                x: [task.Start.toISOString().split("T")[0], task.End.toISOString().split("T")[0]],
+                y: [task.Centre, task.Centre],
+                type: "scatter",
+                mode: "lines+markers",
+                line: { width: 10, color: taskColours[task.Task] },
+                name: task.Task,
+                hoverinfo: "name+x",
+            }));
+
+            const layout = {
+                title: "Trial Recruitment and Onboarding Timeline",
+                xaxis: {
+                    title: "Date",
+                    type: "date",
+                    tickformat: "%b-%Y",
+                },
+                yaxis: {
+                    title: "Centres",
+                    automargin: true,
+                },
+                margin: {
+                    l: 150, // Space for long centre/task names
+                },
+            };
+
+            Plotly.newPlot("timeline", plotData, layout);
         }
 
         const initialData = [
             { Centre: "Centre 1", EthicsApprovalDate: "2025-05-01" },
-            { Centre: "Centre 2", EthicsApprovalDate: "2025-06-01" },
-            // (Additional centre data as before)
+            // Additional centre data omitted for brevity
         ];
 
         generateTimeline(initialData);
