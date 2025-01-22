@@ -5,10 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trial Recruitment and Onboarding Timeline</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+     <style>
+        /* Styles for the static reference window */
+        .reference-window {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 250px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            z-index: 1000;
+        }
+        .reference-window h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+        .reference-window ul {
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Trial Recruitment and Onboarding Timeline</h1>
 
+
+    <!-- Static Reference Window -->
+    <div class="reference-window">
+        <h3>Key Time Durations</h3>
+        <ul>
+            <li><b>Onboarding:</b> 2 weeks</li>
+            <li><b>Participant Screening:</b> 2 weeks</li>
+            <li><b>Legal Approval:</b> 1 week</li>
+            <li><b>Recruitment:</b> 1 week</li>
+            <li><b>Baseline to Clinic Appointment 3:</b> 1 year</li>
+            <li><b>Support Worker Integration:</b> Until Clinic Appointment 1</li>
+        </ul>
+    </div>
     <div id="inputs">
         <h3>Adjust Start Dates</h3>
         <form id="date-form">
@@ -76,7 +112,7 @@
             "Baseline Data Collection": "#8c564b",
             "Randomisation": "#e377c2",
             "Support Worker Integration": "#7f7f7f",
-            "Interval": "#bcbd22",
+            "Interval": "#efe8e7",
             "Clinic Appointment 1": "#17becf",
             "Clinic Appointment 2": "#d62728",
             "Clinic Appointment 3": "#9467bd",
