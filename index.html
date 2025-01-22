@@ -16,50 +16,7 @@
                 <label for="centre1">Centre 1:</label>
                 <input type="date" id="centre1" name="centre1" value="2025-05-01">
             </div>
-            <div>
-                <label for="centre2">Centre 2:</label>
-                <input type="date" id="centre2" name="centre2" value="2025-06-01">
-            </div>
-            <div>
-                <label for="centre3">Centre 3:</label>
-                <input type="date" id="centre3" name="centre3" value="2025-07-01">
-            </div>
-            <div>
-                <label for="centre4">Centre 4:</label>
-                <input type="date" id="centre4" name="centre4" value="2025-08-01">
-            </div>
-            <div>
-                <label for="centre5">Centre 5:</label>
-                <input type="date" id="centre5" name="centre5" value="2025-09-01">
-            </div>
-            <div>
-                <label for="centre6">Centre 6:</label>
-                <input type="date" id="centre6" name="centre6" value="2025-10-01">
-            </div>
-            <div>
-                <label for="centre7">Centre 7:</label>
-                <input type="date" id="centre7" name="centre7" value="2025-11-01">
-            </div>
-            <div>
-                <label for="centre8">Centre 8:</label>
-                <input type="date" id="centre8" name="centre8" value="2025-12-01">
-            </div>
-            <div>
-                <label for="centre9">Centre 9:</label>
-                <input type="date" id="centre9" name="centre9" value="2026-01-01">
-            </div>
-            <div>
-                <label for="centre10">Centre 10:</label>
-                <input type="date" id="centre10" name="centre10" value="2026-03-01">
-            </div>
-            <div>
-                <label for="centre11">Centre 11:</label>
-                <input type="date" id="centre11" name="centre11" value="2026-05-01">
-            </div>
-            <div>
-                <label for="centre12">Centre 12:</label>
-                <input type="date" id="centre12" name="centre12" value="2026-07-01">
-            </div>
+            <!-- Repeat inputs for other centres as needed -->
             <button type="button" id="update-timeline">Update Timeline</button>
         </form>
     </div>
@@ -76,6 +33,7 @@
             "Baseline Data Collection": "#8c564b",
             "Randomisation": "#e377c2",
             "Support Worker Integration": "#7f7f7f",
+            "Interval": "#cccccc", // Grey for intervals
             "Clinic Appointment 1": "#bcbd22",
             "Clinic Appointment 2": "#17becf",
             "Clinic Appointment 3": "#d62728",
@@ -104,16 +62,25 @@
                 randomisationEnd.setDate(randomisationEnd.getDate() + 7); // 1 week randomisation
 
                 const supportWorkerEnd = new Date(baselineStart);
-                supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 4); // Support worker integration until Clinic Appointment 1
+                supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 3); // Support worker integration until Clinic Appointment 1
 
                 const clinic1Start = new Date(baselineStart);
-                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // 4 months for Clinic 1
+                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // 4 months for Clinic Appointment 1
 
                 const clinic2Start = new Date(clinic1Start);
-                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // 4 months for Clinic 2
+                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // 4 months for Clinic Appointment 2
 
                 const clinic3Start = new Date(clinic2Start);
-                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // 4 months for Clinic 3
+                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // 4 months for Clinic Appointment 3
+
+                const clinic1End = new Date(clinic1Start);
+                clinic1End.setDate(clinic1Start.getDate() + 1); // Clinic Appointment 1 duration: 1 day
+
+                const clinic2End = new Date(clinic2Start);
+                clinic2End.setDate(clinic2Start.getDate() + 1); // Clinic Appointment 2 duration: 1 day
+
+                const clinic3End = new Date(clinic3Start);
+                clinic3End.setDate(clinic3Start.getDate() + 1); // Clinic Appointment 3 duration: 1 day
 
                 tasks.push(
                     { Task: "Ethics Approval", Centre, Start: ethicsApproval, End: onboardingEnd },
@@ -124,9 +91,12 @@
                     { Task: "Baseline Data Collection", Centre, Start: baselineStart, End: randomisationEnd },
                     { Task: "Randomisation", Centre, Start: randomisationEnd, End: clinic1Start },
                     { Task: "Support Worker Integration", Centre, Start: randomisationEnd, End: supportWorkerEnd },
-                    { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic2Start },
-                    { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic3Start },
-                    { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: new Date(clinic3Start) }
+                    { Task: "Interval", Centre, Start: randomisationEnd, End: clinic1Start },
+                    { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic1End },
+                    { Task: "Interval", Centre, Start: clinic1End, End: clinic2Start },
+                    { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic2End },
+                    { Task: "Interval", Centre, Start: clinic2End, End: clinic3Start },
+                    { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: clinic3End }
                 );
             });
 
@@ -166,12 +136,6 @@
             { Centre: "Centre 4", EthicsApprovalDate: "2025-08-01" },
             { Centre: "Centre 5", EthicsApprovalDate: "2025-09-01" },
             { Centre: "Centre 6", EthicsApprovalDate: "2025-10-01" },
-            { Centre: "Centre 7", EthicsApprovalDate: "2025-11-01" },
-            { Centre: "Centre 8", EthicsApprovalDate: "2025-12-01" },
-            { Centre: "Centre 9", EthicsApprovalDate: "2026-01-01" },
-            { Centre: "Centre 10", EthicsApprovalDate: "2026-03-01" },
-            { Centre: "Centre 11", EthicsApprovalDate: "2026-05-01" },
-            { Centre: "Centre 12", EthicsApprovalDate: "2026-07-01" },
         ];
 
         generateTimeline(initialData);
