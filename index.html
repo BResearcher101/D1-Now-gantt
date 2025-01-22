@@ -36,9 +36,10 @@
             "Recruitment": "#9467bd",
             "Baseline Data Collection": "#8c564b",
             "Randomisation": "#e377c2",
-            "Clinic Appointment 1": "#7f7f7f",
-            "Clinic Appointment 2": "#bcbd22",
-            "Clinic Appointment 3": "#17becf",
+            "Support Worker Integration": "#7f7f7f",
+            "Clinic Appointment 1": "#bcbd22",
+            "Clinic Appointment 2": "#17becf",
+            "Clinic Appointment 3": "#d62728",
         };
 
         // Generate timeline tasks based on the new sequence
@@ -61,14 +62,17 @@
             const randomisationEnd = new Date(baselineStart);
             randomisationEnd.setDate(randomisationEnd.getDate() + 7); // 1 week randomisation
 
-            const clinic1Start = new Date(randomisationEnd);
-            clinic1Start.setMonth(clinic1Start.getMonth() + 3); // 3 months gap for Clinic 1
+            const supportWorkerEnd = new Date(baselineStart);
+            supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 3); // Support worker integration until Clinic Appointment 1
+
+            const clinic1Start = new Date(baselineStart);
+            clinic1Start.setMonth(clinic1Start.getMonth() + 3); // 3 months for Clinic 1
 
             const clinic2Start = new Date(clinic1Start);
-            clinic2Start.setMonth(clinic2Start.getMonth() + 3); // 3 months gap for Clinic 2
+            clinic2Start.setMonth(clinic2Start.getMonth() + 3); // 3 months for Clinic 2
 
             const clinic3Start = new Date(clinic2Start);
-            clinic3Start.setMonth(clinic3Start.getMonth() + 3); // 3 months gap for Clinic 3
+            clinic3Start.setMonth(clinic3Start.getMonth() + 3); // 3 months for Clinic 3
 
             tasks.push(
                 { Task: "Ethics Approval", Centre, Start: ethicsApproval, End: onboardingEnd },
@@ -78,6 +82,7 @@
                 { Task: "Recruitment", Centre, Start: recruitmentEnd, End: baselineStart },
                 { Task: "Baseline Data Collection", Centre, Start: baselineStart, End: randomisationEnd },
                 { Task: "Randomisation", Centre, Start: randomisationEnd, End: clinic1Start },
+                { Task: "Support Worker Integration", Centre, Start: randomisationEnd, End: supportWorkerEnd },
                 { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic2Start },
                 { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic3Start },
                 { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: new Date(clinic3Start) }
