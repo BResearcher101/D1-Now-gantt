@@ -16,7 +16,7 @@
                 <label for="centre1">Centre 1:</label>
                 <input type="date" id="centre1" name="centre1" value="2025-05-01">
             </div>
-            <!-- Repeat inputs for other centres as needed -->
+            <!-- Add inputs for all centres -->
             <button type="button" id="update-timeline">Update Timeline</button>
         </form>
     </div>
@@ -33,10 +33,12 @@
             "Baseline Data Collection": "#8c564b",
             "Randomisation": "#e377c2",
             "Support Worker Integration": "#7f7f7f",
-            "Interval": "#cccccc", // Grey for intervals
-            "Clinic Appointment 1": "#bcbd22",
-            "Clinic Appointment 2": "#17becf",
-            "Clinic Appointment 3": "#d62728",
+            "Interval 1": "#bcbd22", // Baseline → Clinic 1
+            "Clinic Appointment 1": "#17becf",
+            "Interval 2": "#bcbd22", // Clinic 1 → Clinic 2
+            "Clinic Appointment 2": "#d62728",
+            "Interval 3": "#bcbd22", // Clinic 2 → Clinic 3
+            "Clinic Appointment 3": "#9467bd",
         };
 
         function generateTimeline(data) {
@@ -61,26 +63,20 @@
                 const randomisationEnd = new Date(baselineStart);
                 randomisationEnd.setDate(randomisationEnd.getDate() + 7); // 1 week randomisation
 
-                const supportWorkerEnd = new Date(baselineStart);
-                supportWorkerEnd.setMonth(supportWorkerEnd.getMonth() + 3); // Support worker integration until Clinic Appointment 1
+                const interval1End = new Date(baselineStart);
+                interval1End.setMonth(interval1End.getMonth() + 4); // 4 months Baseline → Clinic 1
 
-                const clinic1Start = new Date(baselineStart);
-                clinic1Start.setMonth(clinic1Start.getMonth() + 4); // 4 months for Clinic Appointment 1
+                const clinic1Date = new Date(interval1End);
 
-                const clinic2Start = new Date(clinic1Start);
-                clinic2Start.setMonth(clinic2Start.getMonth() + 4); // 4 months for Clinic Appointment 2
+                const interval2End = new Date(clinic1Date);
+                interval2End.setMonth(interval2End.getMonth() + 4); // 4 months Clinic 1 → Clinic 2
 
-                const clinic3Start = new Date(clinic2Start);
-                clinic3Start.setMonth(clinic3Start.getMonth() + 4); // 4 months for Clinic Appointment 3
+                const clinic2Date = new Date(interval2End);
 
-                const clinic1End = new Date(clinic1Start);
-                clinic1End.setDate(clinic1Start.getDate() + 1); // Clinic Appointment 1 duration: 1 day
+                const interval3End = new Date(clinic2Date);
+                interval3End.setMonth(interval3End.getMonth() + 4); // 4 months Clinic 2 → Clinic 3
 
-                const clinic2End = new Date(clinic2Start);
-                clinic2End.setDate(clinic2Start.getDate() + 1); // Clinic Appointment 2 duration: 1 day
-
-                const clinic3End = new Date(clinic3Start);
-                clinic3End.setDate(clinic3Start.getDate() + 1); // Clinic Appointment 3 duration: 1 day
+                const clinic3Date = new Date(interval3End);
 
                 tasks.push(
                     { Task: "Ethics Approval", Centre, Start: ethicsApproval, End: onboardingEnd },
@@ -89,14 +85,13 @@
                     { Task: "Legal Approval", Centre, Start: legalApprovalEnd, End: recruitmentEnd },
                     { Task: "Recruitment", Centre, Start: recruitmentEnd, End: baselineStart },
                     { Task: "Baseline Data Collection", Centre, Start: baselineStart, End: randomisationEnd },
-                    { Task: "Randomisation", Centre, Start: randomisationEnd, End: clinic1Start },
-                    { Task: "Support Worker Integration", Centre, Start: randomisationEnd, End: supportWorkerEnd },
-                    { Task: "Interval", Centre, Start: randomisationEnd, End: clinic1Start },
-                    { Task: "Clinic Appointment 1", Centre, Start: clinic1Start, End: clinic1End },
-                    { Task: "Interval", Centre, Start: clinic1End, End: clinic2Start },
-                    { Task: "Clinic Appointment 2", Centre, Start: clinic2Start, End: clinic2End },
-                    { Task: "Interval", Centre, Start: clinic2End, End: clinic3Start },
-                    { Task: "Clinic Appointment 3", Centre, Start: clinic3Start, End: clinic3End }
+                    { Task: "Randomisation", Centre, Start: randomisationEnd, End: interval1End },
+                    { Task: "Interval 1", Centre, Start: randomisationEnd, End: interval1End },
+                    { Task: "Clinic Appointment 1", Centre, Start: clinic1Date, End: clinic1Date },
+                    { Task: "Interval 2", Centre, Start: clinic1Date, End: interval2End },
+                    { Task: "Clinic Appointment 2", Centre, Start: clinic2Date, End: clinic2Date },
+                    { Task: "Interval 3", Centre, Start: clinic2Date, End: interval3End },
+                    { Task: "Clinic Appointment 3", Centre, Start: clinic3Date, End: clinic3Date }
                 );
             });
 
@@ -136,6 +131,12 @@
             { Centre: "Centre 4", EthicsApprovalDate: "2025-08-01" },
             { Centre: "Centre 5", EthicsApprovalDate: "2025-09-01" },
             { Centre: "Centre 6", EthicsApprovalDate: "2025-10-01" },
+            { Centre: "Centre 7", EthicsApprovalDate: "2025-11-01" },
+            { Centre: "Centre 8", EthicsApprovalDate: "2025-12-01" },
+            { Centre: "Centre 9", EthicsApprovalDate: "2026-01-01" },
+            { Centre: "Centre 10", EthicsApprovalDate: "2026-03-01" },
+            { Centre: "Centre 11", EthicsApprovalDate: "2026-05-01" },
+            { Centre: "Centre 12", EthicsApprovalDate: "2026-07-01" },
         ];
 
         generateTimeline(initialData);
